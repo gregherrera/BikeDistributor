@@ -1,0 +1,95 @@
+﻿@model WebMVC.Core31.Views.Order.OrderViewModel.OrderIndexData
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Orders</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Orders[0].OrderId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Orders[0].Company)
+        </th>
+        <th>
+            @Html.DisplayName("Actions")
+        </th>
+    </tr>
+
+    @foreach (var item in Model.Orders)
+    {
+        string selectedRow = "";
+        if (item.OrderId == (int?)ViewData["OrderID"])
+        {
+            selectedRow = "table-success";
+        }
+
+        <tr class="@selectedRow">
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                @Html.ActionLink("Products", "Index", new { orderId = item.OrderId }) |
+                @Html.ActionLink("Receipt", "Index", new { orderId = item.OrderId, showReceipt = true })
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @if (ViewBag.ShowProducts != null && ViewBag.ShowProducts) //Show the partial view
+    {
+        if (Model.Lines != null)
+        {
+            <h3>Order Products</h3>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lines[0].Bike.Brand)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lines[0].Bike.Model)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lines[0].Bike.Price)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lines[0].Quantity)
+                    </th>
+                </tr>
+
+                @foreach (var item in Model.Lines)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bike.Brand)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bike.Model)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Bike.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        }
+    }
+</div>
+
+<div>
+    @if (ViewBag.ShowReceipt != null && ViewBag.ShowReceipt)
+    {
+        @Html.Raw(Model.Receipt)
+    }
+</div>
